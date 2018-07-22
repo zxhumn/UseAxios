@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="search" placeholder="回车查询" @keyup.enter="searchWeatch">
+        <ul>
+            <li v-for="(item, index) in weatherList">
+                {{item.date}}--{{item.high}}--{{item.low}}--{{item.fengxiang}}
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+<script src="./lib/vue.js"></script>
+<script>
+    /*
+        vue的使用ajax获取数据 可以使用如下方法
+            原生
+            自己封装了一下
+            $.ajax
+        vue中如果要通过ajax获取数据
+            官方推出 只能在vue中使用
+                vue-resource vue内部提供的一个通过ajax获取数据的 js库
+                vue-resource 只能集成在vue中 需要导入了vue之后才可以导入
+            第三方推出 可以用在任何的地方 (不仅仅只有浏览器哦,node.js中也可以用(服务器调接口))
+                axios 
+                
+    */
+    let app = new Vue({
+        el: '#app',
+        data: {
+            weatherList: [],
+            search: ''
+        },
+        methods: {
+            searchWeatch() {
+                // vue-resource 来获取网络数据
+                // vue-resource 使用了es6中解决回调的一种语法 promise
+                // 可以不需要使用回调  直接then
+                // then中的两个箭头函数 分别对应着 成功回调 失败回调
+                // this.$http.get(`http://w肉678io9p0-thrcdn.etouch.cn/weather_mini?city=${this.search}`)
+                this.$http.get(`http://wthrcdn.etouch.cn/weather_mini?city=${this.search}`)
+                .then(response => {
+                    console.log('1');
+                    console.log(response);
+                    this.weatherList = response.body.data.forecast;
+                }, response => {
+                    // error callback
+                    console.log('2');
+                    console.log(response);
+                });
+
+
+
+                // 获取查询条件
+                // 搜索数据
+                // 获取到结果之后 渲染到页面上
+            }
+        }
+    })
+
+
+</script>

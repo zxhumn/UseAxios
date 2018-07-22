@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="search" placeholder="回车查询" @keyup.enter="searchWeatch">
+        <ul>
+            <li v-for="(item, index) in weatherList">
+                {{item.date}}--{{item.high}}--{{item.low}}--{{item.fengxiang}}
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>
+<script src="./lib/vue.js"></script>
+<script src="./lib/jquery-1.12.4.min.js"></script>
+<script>
+    /*
+        vue的使用ajax获取数据 可以使用如下方法
+            原生
+            自己封装了一下
+            $.ajax
+        vue中如果要通过ajax获取数据
+            官方推出 只能在vue中使用
+                vue-resource vue内部提供的一个通过ajax获取数据的 js库
+            第三方推出 可以用在任何的地方 
+                axios
+    */
+    let app = new Vue({
+        el: '#app',
+        data: {
+            weatherList: [],
+            search: ''
+        },
+        methods: {
+            searchWeatch() {
+                /*
+                    // ajax使用五部曲
+                    // 1.创建异步对象
+                    let xhr = new XMLHttpRequest();
+                    // 2.设置请求行
+                    xhr.open('get', `http://wthrcdn.etouch.cn/weather_mini?city=${this.search}`);
+                    // 3.设置请求头 post
+                    // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    // 4.注册回调函数中
+                    // xhr.onload()
+                    xhr.onload =  ()=>{
+                        // console.log(xhr.responseText);
+                        let backData = JSON.parse(xhr.responseText);
+                        console.log(backData);
+                        this.weatherList = backData.data.forecast;
+                        console.log(this);
+                    }
+                    // 5.设置请求主体 发送
+                    xhr.send();
+                */
+
+               // jQ的ajax
+               $.ajax({
+                   url:'http://wthrcdn.etouch.cn/weather_mini',
+                   data:{
+                       city:this.search
+                   },
+                   dataType:"json",
+                //    type:,
+                   success:(backData)=>{
+                       console.log(backData);
+                       this.weatherList = backData.data.forecast;
+                       console.log(this);
+                   }
+               })
+
+
+
+                // 获取查询条件
+                // 搜索数据
+                // 获取到结果之后 渲染到页面上
+            }
+        }
+    })
+
+
+</script>
